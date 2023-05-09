@@ -1,0 +1,69 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python src/stage_01_load_and_save.py --config=params.yaml
+    deps:
+    - path: src/stage_01_load_and_save.py
+      md5: e80ec9657f726ec8d867f08c8312d5e8
+      size: 1208
+    - path: src/utils/common_utils.py
+      md5: e05893d4b846dd710b56f85ca3406e17
+      size: 1221
+    params:
+      params.yaml:
+        artifacts.raw_local_data: artifacts/raw_local_data_dir/data.csv
+        data_source.s3_source: hour.csv
+    outs:
+    - path: artifacts/raw_local_data_dir/data.csv
+      md5: 9ed2fd9aa18e6c14fec2c049c7ef432e
+      size: 57571
+  split_data:
+    cmd: python src/stage_02_split_data.py --config=params.yaml
+    deps:
+    - path: artifacts/raw_local_data_dir/data.csv
+      md5: 9ed2fd9aa18e6c14fec2c049c7ef432e
+      size: 57571
+    - path: src/stage_02_split_data.py
+      md5: 4efb3a2839036c7f1209cca8d74f4631
+      size: 1487
+    - path: src/utils/common_utils.py
+      md5: e05893d4b846dd710b56f85ca3406e17
+      size: 1221
+    params:
+      params.yaml:
+        artifacts.raw_local_data: artifacts/raw_local_data_dir/data.csv
+        artifacts.split_data.processed_data_dir: artifacts/processed_data
+        artifacts.split_data.test_path: artifacts/processed_data/test.csv
+        artifacts.split_data.train_path: artifacts/processed_data/train.csv
+        base.random_state: 42
+        base.test_size: 0.2
+    outs:
+    - path: artifacts/processed_data/test.csv
+      md5: dcdd236238fdadc4ba079b432b632abc
+      size: 11667
+    - path: artifacts/processed_data/train.csv
+      md5: 803d238abd4f811f1d4a377fe6a0dba8
+      size: 46020
+  evaluate:
+    cmd: python src/stage_04_evaluate.py --config=params.yaml
+    deps:
+    - path: artifacts/processed_data/test.csv
+      md5: dcdd236238fdadc4ba079b432b632abc
+      size: 11667
+    - path: artifacts/saved_models/model.joblib
+      md5: 91c46337cd369048ea2e21617f027e24
+      size: 1223
+    - path: src/stage_04_evaluate.py
+      md5: bebbab04cea80b61bb5528b9a4f1472a
+      size: 1666
+    - path: src/utils/common_utils.py
+      md5: e05893d4b846dd710b56f85ca3406e17
+      size: 1221
+    params:
+      params.yaml:
+        artifacts.split_data.test_path: artifacts/processed_data/test.csv
+        base.target_col: cnt
+    outs:
+    - path: artifacts/report/scores.json
+      md5: 01e4e0a4c4484a71211f54f4a918f096
+      size: 104
