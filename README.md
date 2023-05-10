@@ -1,5 +1,5 @@
 # dvc-pipeline
-DVC project for DL usecase using tensorflow
+The goal of this competition is to use machine learning to identify Eastern African bird species by sound.
 
 ## STEPS FOR STAGE 01: get data
 

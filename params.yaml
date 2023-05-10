@@ -1,11 +1,21 @@
 base:
-  project: simple-dvc-project
-  random_state: 42
-  target_col: "cnt"
-  test_size: 0.2
+    use_aug : False
+    num_classes : 264
+    batch_size : 64
+    ep1ochs : 12
+    PRECISION : 16    
+    PATIENCE : 8    
+    seed : 2023
+    model : "tf_efficientnet_b0_ns"
+    pretrained : True            
+    weight_decay : 1e-3
+    use_mixup : True
+    mixup_alpha : 0.2
+    DEVICE : torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 data_source:
-  s3_source: hour.csv
+  root_dir: Data\train_audio
+  meta_data: Data\train_metadata.csv
 
 artifacts:
   artifacts_dir: artifacts
@@ -15,8 +25,10 @@ artifacts:
 
   split_data:
     processed_data_dir: artifacts/processed_data
-    train_path: artifacts/processed_data/train.csv
-    test_path: artifacts/processed_data/test.csv
+    train_images: artifacts/processed_data
+    val_images: artifacts/processed_data/val.csv
+    train_csv: artifacts/processed_data/train.csv
+    val_csv: artifacts/processed_data/val.csv
 
   reports:
     reports_dir: artifacts/report
@@ -30,5 +42,7 @@ artifacts:
 estimators:
   ElasticNet:
     params:
-      alpha: 0.7
-      l1_ratio: 0.4
+      SR : 32000
+      DURATION : 5
+      MAX_READ_SAMPLES : 5
+      LR : 5e-4

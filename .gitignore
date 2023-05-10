@@ -5,7 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
-
+Data
+birdclef-2023.zip
 # Distribution / packaging
 .Python
 build/

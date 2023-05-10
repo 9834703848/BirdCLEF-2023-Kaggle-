@@ -1,19 +1,13 @@
-# local lib
--e .
-
-# dvc
+### dependency
+black
 dvc
-dvc[gdrive]
-dvc[s3]
+tqdm
+tensorflow
+joblib
 
-# other important libs
-pandas
-scikit-learn
+Pillow
+scipy
 
-# testing 
-pytest
-tox
-flake8 
 
-# webapp
-flask
+### local packages -
+-e . # << uncomment this to install from setup.py
